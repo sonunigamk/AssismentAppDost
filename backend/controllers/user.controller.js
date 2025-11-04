@@ -97,3 +97,24 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+// --- Logout User ---
+export const logoutUser = (req, res) => {
+  const token = req.cookies.token;
+
+  if (token) {
+    res.cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    return res.status(200).json({ message: "Logged out successfully" });
+  } else {
+    return res.status(400).json({ message: "You are already logged out" });
+  }
+};
+
+
+export const getMyProfile = (req, res) => {
+  res.status(200).json(req.user);
+};
+

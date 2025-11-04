@@ -1,5 +1,3 @@
-// backend/routes/postRoutes.js
-
 import express from "express";
 import { createPost, getAllPosts } from "../controllers/post.controller.js";
 import { protect } from "../middleware/authMiddleware.js";
