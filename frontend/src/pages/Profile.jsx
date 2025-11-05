@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 
 import { AuthContext } from '../context/AuthContext';
 import { getMyPosts } from '../api/postApi';
-import { deleteUserProfile, updateUserProfile } from '../api/userApi';
+import { deleteUserProfile } from '../api/userApi';
 import PostCard from '../components/PostCard';
 import Modal from '../components/Modal';
 import EditProfileForm from '../components/EditProfileForm';
@@ -23,7 +23,6 @@ const Profile = () => {
     const [editingPost, setEditingPost] = useState(null);
 
     useEffect(() => {
-        // This effect will run after the initial check in AuthProvider
         if (!user) {
             navigate('/login');
         } else {
@@ -81,13 +80,9 @@ const Profile = () => {
         setEditingPost(null);
     };
 
-    // --- THIS IS THE FIX ---
-    // If the user object is not yet available (during the initial load),
-    // return null to prevent trying to render with null data.
     if (!user) {
         return null;
     }
-    // --- END OF FIX ---
 
     return (
         <div className="bg-gray-100 min-h-screen">
@@ -142,6 +137,7 @@ const Profile = () => {
                     )}
                 </div>
 
+                {/* THE ONLY "NEW POST" BUTTON - THE FLOATING ONE */}
                 <button
                     onClick={() => setIsCreateModalOpen(true)}
                     className="fixed bottom-8 right-8 z-20 rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -150,6 +146,7 @@ const Profile = () => {
                     + New Post
                 </button>
 
+                {/* ALL THE MODALS */}
                 <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
                     <CreatePostForm onPostCreated={handleNewPost} />
                 </Modal>
@@ -194,7 +191,6 @@ const Profile = () => {
                         </div>
                     </div>
                 </Modal>
-
             </div>
         </div>
     );

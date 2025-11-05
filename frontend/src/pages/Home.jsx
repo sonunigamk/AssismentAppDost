@@ -63,7 +63,6 @@ const Home = () => {
     }
 
     return (
-        // We ensure the page background is a light gray
         <div className="bg-gray-100 min-h-screen">
             <div className="container mx-auto max-w-2xl px-4 py-8">
                 <div>
@@ -71,7 +70,7 @@ const Home = () => {
                     {loadingPosts ? (
                         <p className="text-center text-gray-500">Loading posts...</p>
                     ) : (
-                        <div className="space-y-4"> {/* This adds space between posts */}
+                        <div className="space-y-4">
                             {posts.length > 0 ? (
                                 posts.map((post) => (
                                     <PostCard
@@ -90,6 +89,7 @@ const Home = () => {
                     )}
                 </div>
 
+                {/* THE ONLY "NEW POST" BUTTON - THE FLOATING ONE */}
                 <button
                     onClick={() => setIsCreateModalOpen(true)}
                     className="fixed bottom-8 right-8 z-20 rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -98,10 +98,12 @@ const Home = () => {
                     + New Post
                 </button>
 
+                {/* MODAL FOR CREATING A POST */}
                 <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
                     <CreatePostForm onPostCreated={handleNewPost} />
                 </Modal>
 
+                {/* MODAL FOR EDITING A POST */}
                 {editingPost && (
                     <Modal isOpen={!!editingPost} onClose={() => setEditingPost(null)}>
                         <EditPostForm
