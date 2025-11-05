@@ -1,10 +1,8 @@
-// src/components/CreatePostForm.jsx
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createPost } from '../api/postApi';
 
-// This component receives a function 'onPostCreated' as a prop
-// It will call this function after a new post is successfully created.
+
 const CreatePostForm = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +19,7 @@ const CreatePostForm = ({ onPostCreated }) => {
       const newPost = await createPost(content);
       toast.success('Post created successfully!');
       setContent(''); // Clear the textarea after posting
-      onPostCreated(newPost); // Notify the parent component (Home.jsx)
+      onPostCreated(newPost); 
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to create post.';
       toast.error(errorMessage);

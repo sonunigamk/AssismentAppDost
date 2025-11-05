@@ -35,14 +35,12 @@ const Login = () => {
             const data = await loginUser(email, password);
 
             // On success:
-            login(data.user); // 1. Update the global context with user data
-            toast.success(data.message || 'Login successful!'); // 2. Show a success toast
-            navigate('/'); // 3. Redirect to the home page
+            login(data.user); //  Update the global context with user data
+            toast.success(data.message || 'Login successful!'); //  Show a success toast
+            navigate('/'); //  Redirect to the home page
 
         } catch (error) {
-            // On error:
-            // We use optional chaining (?.) to safely access the error message
-            // This prevents crashes if the error object has a different structure.
+        
             const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
             toast.error(errorMessage); // Show an error toast
             console.error('Login error:', error);

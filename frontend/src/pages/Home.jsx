@@ -1,11 +1,12 @@
-// src/pages/Home.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 import { AuthContext } from '../context/AuthContext';
 import { getAllPosts } from '../api/postApi';
+import Modal from '../components/Modal';
 import CreatePostForm from '../components/CreatePostForm';
+import EditPostForm from '../components/EditPostForm';
 import PostCard from '../components/PostCard';
 
 const Home = () => {
@@ -14,11 +15,9 @@ const Home = () => {
 
     const [posts, setPosts] = useState([]);
     const [loadingPosts, setLoadingPosts] = useState(true);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editingPost, setEditingPost] = useState(null);
 
-    // --- 1. The new state for our hide/show logic ---
-    const [isCreating, setIsCreating] = useState(false);
-
-    // --- Protection and Data Fetching (no changes here) ---
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -29,7 +28,7 @@ const Home = () => {
                     const fetchedPosts = await getAllPosts();
                     setPosts(fetchedPosts);
                 } catch (error) {
-                    toast.error('Failed to fetch posts.');
+                    toast.error('Failed to fetch posts. Please try again.');
                 } finally {
                     setLoadingPosts(false);
                 }
@@ -40,50 +39,77 @@ const Home = () => {
 
     const handleNewPost = (newPostData) => {
         const postWithAuthor = { ...newPostData, author: { _id: user._id, name: user.name } };
-        setPosts([postWithAuthor, ...posts]);
-        setIsCreating(false); // --- After posting, hide the form ---
+        setPosts(prevPosts => [postWithAuthor, ...prevPosts]);
+        setIsCreateModalOpen(false);
+    };
+
+    const handleDeletePost = (postId) => {
+        setPosts(prevPosts => prevPosts.filter(p => p._id !== postId));
+    };
+
+    const handleEditPost = (postToEdit) => {
+        setEditingPost(postToEdit);
+    };
+
+    const handleUpdatePost = (updatedPost) => {
+        setPosts(prevPosts =>
+            prevPosts.map(p => (p._id === updatedPost._id ? updatedPost : p))
+        );
+        setEditingPost(null);
     };
 
     if (!user) {
-        return null; // Render nothing while redirecting
+        return null;
     }
 
-    // --- Main Render with Conditional Logic ---
     return (
-        <div className="container mx-auto max-w-2xl px-4 py-8">
+        // We ensure the page background is a light gray
+        <div className="bg-gray-100 min-h-screen">
+            <div className="container mx-auto max-w-2xl px-4 py-8">
+                <div>
+                    <h2 className="mb-4 text-2xl font-semibold text-gray-800">Recent Posts</h2>
+                    {loadingPosts ? (
+                        <p className="text-center text-gray-500">Loading posts...</p>
+                    ) : (
+                        <div className="space-y-4"> {/* This adds space between posts */}
+                            {posts.length > 0 ? (
+                                posts.map((post) => (
+                                    <PostCard
+                                        key={post._id}
+                                        post={post}
+                                        onDelete={handleDeletePost}
+                                        onEdit={handleEditPost}
+                                    />
+                                ))
+                            ) : (
+                                <div className="rounded-lg bg-white p-6 text-center text-gray-500">
+                                    No posts yet. Be the first to post!
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
 
-            {/* --- 2. The Conditional Rendering Block --- */}
-            <div className="mb-8">
-                {isCreating ? (
-                    // If isCreating is true, show the form
-                    <CreatePostForm
-                        onPostCreated={handleNewPost}
-                        onCancel={() => setIsCreating(false)} // Pass a cancel function
-                    />
-                ) : (
-                    // If isCreating is false, show the prompt button
-                    <button
-                        onClick={() => setIsCreating(true)}
-                        className="w-full rounded-lg bg-white p-4 text-left text-gray-500 shadow-md hover:bg-gray-50"
-                    >
-                        Create a new post...
-                    </button>
-                )}
-            </div>
+                <button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="fixed bottom-8 right-8 z-20 rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    aria-label="Create new post"
+                >
+                    + New Post
+                </button>
 
-            {/* The feed of recent posts (no changes here) */}
-            <div>
-                <h2 className="mb-4 text-2xl font-semibold text-gray-800">Recent Posts</h2>
-                {loadingPosts ? (
-                    <p>Loading posts...</p>
-                ) : (
-                    <div>
-                        {posts.length > 0 ? (
-                            posts.map((post) => <PostCard key={post._id} post={post} />)
-                        ) : (
-                            <p>No posts yet. Be the first to post!</p>
-                        )}
-                    </div>
+                <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
+                    <CreatePostForm onPostCreated={handleNewPost} />
+                </Modal>
+
+                {editingPost && (
+                    <Modal isOpen={!!editingPost} onClose={() => setEditingPost(null)}>
+                        <EditPostForm
+                            post={editingPost}
+                            onPostUpdated={handleUpdatePost}
+                            onCancel={() => setEditingPost(null)}
+                        />
+                    </Modal>
                 )}
             </div>
         </div>
