@@ -43,7 +43,7 @@ const PostCard = ({ post, onDelete, onEdit }) => {
   const displayedContent = isExpanded ? post.content : `${post.content.substring(0, TRUNCATE_LENGTH)}${shouldTruncate ? '...' : ''}`;
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
+    <div className="bg-white p-4 rounded-sm shadow">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center">
           <div className="mr-3 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
