@@ -1,9 +1,7 @@
-// src/pages/Signup.jsx
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
-// Import our API function and Context
 import { registerUser } from '../api/userApi';
 import { AuthContext } from '../context/AuthContext';
 
@@ -16,7 +14,6 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const { name, email, password } = formData;
-
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -30,12 +27,9 @@ const Signup = () => {
 
     try {
       const data = await registerUser(name, email, password);
-
-      // On successful registration:
-      login(data.user); // 1. Log the user in immediately
-      toast.success(data.message || 'Signup successful!'); // 2. Show success toast
-      navigate('/'); // 3. Redirect to the home page
-
+      login(data.user);
+      toast.success(data.message || 'Signup successful!');
+      navigate('/');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred during signup.';
       toast.error(errorMessage);
@@ -46,16 +40,13 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 overflow-hidden">
+    <div className="flex items-center justify-center bg-gray-50" style={{ height: 'calc(100vh - 4rem)' }}>
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
         <h2 className="mb-6 text-center text-3xl font-bold text-gray-900">
           Create a new account
         </h2>
 
-        {/* The test buttons are now removed */}
-
         <form onSubmit={handleSubmit}>
-          {/* Name Input */}
           <div className="mb-4">
             <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-700">
               Full Name
@@ -72,8 +63,6 @@ const Signup = () => {
               disabled={loading}
             />
           </div>
-
-          {/* Email Input */}
           <div className="mb-4">
             <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">
               Email Address
@@ -90,8 +79,6 @@ const Signup = () => {
               disabled={loading}
             />
           </div>
-
-          {/* Password Input */}
           <div className="mb-6">
             <label htmlFor="password" className="mb-2 block text-sm font-medium text-gray-700">
               Password
@@ -109,8 +96,6 @@ const Signup = () => {
               disabled={loading}
             />
           </div>
-
-          {/* Submit Button */}
           <div>
             <button
               type="submit"
