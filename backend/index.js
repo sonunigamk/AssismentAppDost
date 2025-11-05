@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://assisment-app-dost-57.vercel.app",
     credentials: true,
   })
 );
