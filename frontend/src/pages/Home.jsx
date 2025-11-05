@@ -28,7 +28,7 @@ const Home = () => {
                     const fetchedPosts = await getAllPosts();
                     setPosts(fetchedPosts);
                 } catch (error) {
-                    toast.error('Failed to fetch posts. Please try again.');
+                    toast.error('Failed to fetch posts.');
                 } finally {
                     setLoadingPosts(false);
                 }
@@ -52,9 +52,7 @@ const Home = () => {
     };
 
     const handleUpdatePost = (updatedPost) => {
-        setPosts(prevPosts =>
-            prevPosts.map(p => (p._id === updatedPost._id ? updatedPost : p))
-        );
+        setPosts(prevPosts => prevPosts.map(p => (p._id === updatedPost._id ? updatedPost : p)));
         setEditingPost(null);
     };
 
@@ -73,12 +71,7 @@ const Home = () => {
                         <div className="space-y-4">
                             {posts.length > 0 ? (
                                 posts.map((post) => (
-                                    <PostCard
-                                        key={post._id}
-                                        post={post}
-                                        onDelete={handleDeletePost}
-                                        onEdit={handleEditPost}
-                                    />
+                                    <PostCard key={post._id} post={post} onDelete={handleDeletePost} onEdit={handleEditPost} />
                                 ))
                             ) : (
                                 <div className="rounded-lg bg-white p-6 text-center text-gray-500">
@@ -89,7 +82,6 @@ const Home = () => {
                     )}
                 </div>
 
-                {/* THE ONLY "NEW POST" BUTTON - THE FLOATING ONE */}
                 <button
                     onClick={() => setIsCreateModalOpen(true)}
                     className="fixed bottom-8 right-8 z-20 rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -98,19 +90,13 @@ const Home = () => {
                     + New Post
                 </button>
 
-                {/* MODAL FOR CREATING A POST */}
                 <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
                     <CreatePostForm onPostCreated={handleNewPost} />
                 </Modal>
 
-                {/* MODAL FOR EDITING A POST */}
                 {editingPost && (
                     <Modal isOpen={!!editingPost} onClose={() => setEditingPost(null)}>
-                        <EditPostForm
-                            post={editingPost}
-                            onPostUpdated={handleUpdatePost}
-                            onCancel={() => setEditingPost(null)}
-                        />
+                        <EditPostForm post={editingPost} onPostUpdated={handleUpdatePost} onCancel={() => setEditingPost(null)} />
                     </Modal>
                 )}
             </div>
