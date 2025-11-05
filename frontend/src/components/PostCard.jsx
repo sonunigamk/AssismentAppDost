@@ -46,13 +46,13 @@ const PostCard = ({ post, onDelete, onEdit }) => {
     <div className="bg-white p-4 rounded-sm shadow">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center">
-          <div className="mr-3 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
-            <span className="text-xl font-bold">
+          <div className="mr-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
+            <span className="text-xl font-semibold">
               {post.author?.name ? post.author.name.charAt(0).toUpperCase() : 'A'}
             </span>
           </div>
           <div>
-            <div className="font-bold text-gray-900">{post.author?.name || 'Anonymous'}</div>
+            <div className="font-semibold text-gray-900">{post.author?.name || 'Anonymous'}</div>
             <div className="text-xs text-gray-500">{formatDate(post.createdAt)}</div>
           </div>
         </div>
